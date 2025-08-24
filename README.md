@@ -1,12 +1,30 @@
-# React + Vite
+# Chef Claude
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Suggests a recipe from a list of ingredients.  
+Frontend: React + Vite.  
+Backend: Netlify Function calling Hugging Face Inference API (keeps the token secret and avoids CORS).
 
-Currently, two official plugins are available:
+## How it works
+- The UI POSTs to `/.netlify/functions/get-recipe`.
+- The Netlify Function calls `mistralai/Mixtral-8x7B-Instruct-v0.1` via `@huggingface/inference`.
+- Returns a markdown recipe shown in the app.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Environment
+Set on Netlify → Site settings → Environment variables:
+- `HF_ACCESS_TOKEN` — your Hugging Face token
 
-## Expanding the ESLint configuration
+## Deployment
+Connected to Netlify. Every push to `main` builds and deploys.  
+SPA routing is handled via `netlify.toml`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Scripts
+- `npm install`
+- `npm run build`
+
+## API (frontend usage)
+```js
+await fetch('/.netlify/functions/get-recipe', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ ingredients: ['tomato', 'onion', 'eggs', 'pasta'] })
+});

@@ -19,14 +19,10 @@ export async function handler(event) {
     if (!Array.isArray(ingredients) || ingredients.length === 0) {
       return { statusCode: 400, body: 'Invalid payload: "ingredients" must be a non-empty array' };
     }
-
-    // IMPORTANT: la clé vient des variables d'env Netlify (pas du front)
     const hf = new InferenceClient(process.env.HF_ACCESS_TOKEN);
 
     const response = await hf.chatCompletion({
       model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
-      // Pour éviter la sélection "auto selected provider: together", on peut forcer HF :
-      // provider: 'hf-inference',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: `I have ${ingredients.join(', ')}. Please suggest a recipe.` },
