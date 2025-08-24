@@ -105,6 +105,11 @@ ul.ingredients-list > li {
     cursor: pointer;
 }
 
+.get-recipe-container button:hover {
+    font-size: 0.975rem;
+    padding: 11px 19px;
+}
+
 .suggested-recipe-container {
     color: #475467;
     line-height: 28px;
